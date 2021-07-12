@@ -1,0 +1,90 @@
+responseMap = Map();
+responseMap.put("Content-Type","text/richtext");
+responseMap.put("status_code",204);
+sendmail
+[
+	from :zoho.adminuserid
+	to :"anilkumar.g@zohotest.com"
+	subject :"mmcrm_twiliosmscallback"
+	message :crmAPIRequest
+]
+payload = crmAPIRequest.get("body");
+keypairs = payload.toList("&");
+mapParameter = Map();
+for each  keypair in keypairs
+{
+	paramName = keypair.getPrefix("=");
+	paramValue = zoho.encryption.urlDecode(keypair.getSuffix("="));
+	mapParameter.put(paramName,paramValue);
+}
+//info mapParameter;
+messageContent = mapParameter.get("Body");
+phoneNum = mapParameter.get("From");
+//phoneNum = "+919884362273";
+phoneNum2 = "";
+if(phoneNum.contains("+"))
+{
+	phoneNum2 = phoneNum.getSuffix("+1");
+}
+info phoneNum;
+info "\n" + phoneNum2;
+//criteria = "Phone:equals:" + phoneNum ;
+contId = "";
+leadId = "";
+respbody = "";
+criteria = "((Phone:equals:" + phoneNum + ") or (Phone:equals:" + phoneNum2 + "))";
+info criteria;
+searchContact = zoho.crm.searchRecords("Contacts",criteria);
+info "searchCONT : " + searchContact;
+searchLead = zoho.crm.searchRecords("Leads",criteria);
+if(searchContact.isNull() || searchContact.isEmpty())
+{
+	if(searchLead.isNull() || searchLead.isEmpty())
+	{
+		updateMap = Map:String({"Message_Sent":messageContent,"Name":"Incoming SMS"});
+		m = Map:String();
+		l = List();
+		l.add(updateMap);
+		m.put("module","SMS_History");
+		m.put("data",l);
+		resp = zoho.crm.invokeConnector("crm.create",m);
+		info resp;
+		respbody = "No Match";
+		//	responseMap.put("body","No Match");
+		//	return {"crmAPIResponse":responseMap};
+	}
+}
+if(!(searchContact.isNull() || searchContact.isEmpty()))
+{
+	contId = searchContact.get(0).get("id");
+	updateMap = Map:String({"Message_Sent":messageContent,"Name":"Incoming SMS","Related_Lead":leadId,"Related_Contact":contId});
+	m = Map:String();
+	l = List();
+	l.add(updateMap);
+	m.put("module","SMS_History");
+	m.put("data",l);
+	resp = zoho.crm.invokeConnector("crm.create",m);
+	info "After History \n";
+	info resp;
+	respbody = "contact Rec Matched";
+	//responseMap.put("body","contact Rec Matched");
+	//return {"crmAPIResponse":responseMap};
+}
+if(!(searchLead.isNull() || searchLead.isEmpty()))
+{
+	leadId = searchLead.get(0).get("id");
+	updateMap = Map:String({"Message_Sent":messageContent,"Name":"Incoming SMS","Related_Lead":leadId,"Related_Contact":contId});
+	m = Map:String();
+	l = List();
+	l.add(updateMap);
+	m.put("module","SMS_History");
+	m.put("data",l);
+	resp = zoho.crm.invokeConnector("crm.create",m);
+	info "After History \n";
+	info resp;
+	respbody = "Lead Rec Matched";
+	//responseMap.put("body","Lead Rec Matched");
+	//return {"crmAPIResponse":responseMap};
+}
+responseMap.put("body",respbody);
+return {"crmAPIResponse":responseMap};

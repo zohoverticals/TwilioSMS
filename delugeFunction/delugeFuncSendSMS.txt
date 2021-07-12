@@ -1,0 +1,74 @@
+m = Map:String();
+m.put("type","CurrentUser");
+resp = zoho.crm.invokeConnector("crm.getusers",m);
+response = resp.get("response");
+users = response.getJSON("users").toJSONList().toString();
+indMobile = users.getJSON("mobile");
+contactId = contact.get("Contacts.ID");
+datamap = Map:String();
+datamap.put("module","Contacts");
+datamap.put("id",contactId);
+resp = zoho.crm.invokeConnector("crm.get",datamap);
+resp1 = resp.get("response")._toMap();
+res = resp1.get("data");
+if(res.startsWith("["))
+{
+	temp = res.subString(1,res.length() - 1);
+}
+else
+{
+	temp = res.toJSONList().toString();
+}
+reqq = temp._toMap();
+fullName = reqq.get("Last_Name");
+mobile = reqq.get("Mobile");
+tmobiletemp = zoho.crm.getOrgVariable("mmcrm__Twilio_Mobile_Number");
+if(tmobiletemp.contains(" "))
+{
+	twiliomobile = tmobiletemp.replaceAll(" ","",false);
+}
+else
+{
+	twiliomobile = tmobiletemp;
+}
+if(twiliomobile.contains("-"))
+{
+	twiliomobilenew = twiliomobile.replaceAll("-","",false);
+}
+else
+{
+	twiliomobilenew = tmobiletemp;
+}
+twilioAccSId = zoho.crm.getOrgVariable("mmcrm__Twilio_Account_SID");
+authtokenTwilio = zoho.crm.getOrgVariable("mmcrm__Twilio_AuthToken");
+if(fullName == null || fullName == "null" || fullName == "")
+{
+	fullName = "";
+}
+if(mobile == null || mobile == "null" || mobile == "")
+{
+	mobile = "";
+}
+messageToBeSent = "New Contact Information:\n" + fullName + " has been added as a new Contact to the CRM System.";
+baseEncoded = zoho.encryption.base64Encode(twilioAccSId + ":" + authtokenTwilio);
+encode = baseEncoded.removeFirstOccurence("\n");
+headermap = Map:String();
+headermap.put("Authorization","Basic " + encode);
+mappp = Map:String();
+mappp.put("To",indMobile);
+mappp.put("From",twiliomobilenew);
+mappp.put("Body",messageToBeSent);
+mappp.put("locale","en");
+/*
+locale = zoho.crm.getOrgVariable("twilio__Language");
+if(locale == null || locale == "null" || locale == "")
+{
+	mappp.put("locale","en");
+}
+else
+{
+	mappp.put("locale",locale);
+}
+*/
+respp = postUrl("https://api.twilio.com/2010-04-01/Accounts/" + twilioAccSId + "/Messages.json",mappp,headermap);
+info respp;

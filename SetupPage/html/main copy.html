@@ -1,0 +1,337 @@
+<html>
+<head>
+<title>crm popup page</title>
+<script type="text/javascript" src="../lib/handlebars4.1.js"></script>
+<script type="text/javascript" src="../lib/ZohoEmbededAppSDK.min.js"></script>
+<script type="text/javascript" src="../lib/jquery-1.11.1.min.js"></script>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+
+<script
+  src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"
+  integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="
+  crossorigin="anonymous"></script>
+
+<!-- <script type="text/javascript" src="lib/jquery-3.3.1.min.js"></script> -->
+</head>
+
+<body>
+<script type="text/javascript">
+    var twilioInfo;
+    $(document).ready(function(){
+        // var widfled = $("window").width();
+        // var heifled = $("window").height();
+        ZOHO.embeddedApp.init().then(function(data){
+            console.log("Widget_Initialized");
+            ZOHO.CRM.UI.Resize({height:7500, width:750}).then(function(data){
+            console.log(data +" PopUp Resized");
+            });                     
+            isSyncEnabled();
+        });                                
+    })
+    function loadButtons(){
+        $("#Twilio_Register").click(function(){
+                window.open("https://www.twilio.com/try-twilio");
+            });
+        $("#Twilio_unregister").click(function(){
+                $(".BlackBG").show();
+                $(".confirmationpopup").show();
+            });
+        $("#save").click(function(){
+            var Twilio_Account_SID = $("#Twilio_Account_SID").val();
+            var Twilio_AuthToken = $("#Twilio_AuthToken").val();
+            var Twilio_Mobile_Number = $("#Twilio_Mobile_Number").val();
+            if (Twilio_Account_SID == "") {
+                alert("Please enter Twilio Account SID")
+            }
+            else if (Twilio_AuthToken == "") {
+                alert("Please enter Twilio AuthToken")
+            }
+            else if (Twilio_Mobile_Number == "") {
+                alert("Please enter Twilio Mobile Number")
+            }
+            else {
+                var str = Twilio_Account_SID + ":" + Twilio_AuthToken;
+                var encodedAuth = btoa(str);
+                request = {
+                    url: "https://api.twilio.com/2010-04-01/Accounts/"+Twilio_Account_SID+"/IncomingPhoneNumbers.json",
+                    headers: {
+                        Authorization: "Basic " + encodedAuth,
+                    }
+                }
+                ZOHO.CRM.HTTP.get(request).then(function(data) {
+                    var list = JSON.parse(data);
+                    if (list.code == 20404) {
+                        alert("Please check either your entered Twilio Account SID or AuthToken is incorrect")
+                    }
+                    else if (list.code == 20008) {
+                        alert ("Resource not accessible with Test Account Credentials")
+                    }
+                    else if (list.first_page_uri != null || list.first_page_uri != ""){
+                        ZOHO.CRM.CONNECTOR.invokeAPI("crm.set",{"apiname":"1stopro__Twilio_Account_SID","value":Twilio_Account_SID}).then(function(){
+                            ZOHO.CRM.CONNECTOR.invokeAPI("crm.set",{"apiname":"1stopro__Twilio_AuthToken","value":Twilio_AuthToken}).then(function(){
+                                ZOHO.CRM.CONNECTOR.invokeAPI("crm.set",{"apiname":"1stopro__Twilio_Mobile_Number","value":Twilio_Mobile_Number}).then(function(){
+
+                                        /*ZOHO.CRM.ACTION.enableAccountAccess().then(function(data){
+                                            console.log(data);
+                                        })
+                                        */
+                                        $(".datamessage").text("Twilio Subscribed Successfully")
+                                        $("#unsubscribeMsg").show();
+                                        setTimeout(function(){
+                                            $("#unsubscribeMsg").hide();  
+                                            $(".datamessage").text("Twilio Unsubscribed Successfully");
+                                            location.reload();
+                                        }, 2000);
+                                });
+                            });
+                        });
+                    }
+                    else {
+                        alert("Please check either your entered Twilio Account SID or AuthToken is incorrect")
+                    }
+                });
+            }
+        }); 
+    }
+    function isSyncEnabled(){
+        var data = {apiKeys:["1stopro__Twilio_Account_SID","1stopro__Twilio_AuthToken","1stopro__Twilio_Mobile_Number"]};
+        ZOHO.CRM.API.getOrgVariable(data).then(function(data){
+             console.log(data);
+             if(data == undefined || data == "" || 
+                data.Success.Content == undefined || 
+                data.Success.Content == "" || 
+                data.Success.Content["1stopro__Twilio_Account_SID"].value == "")
+             {
+                 console.log("Twilio is not configured!"); 
+                 $("#Twilio").show(); 
+                 $("#TwilioDone").hide();                                             
+             }else
+             {
+                twilioInfo = data.Success.Content;
+                $("#TwilioDone").show();
+                $("#Twilio").hide();
+             }
+        });
+
+        var connectorName = "eventpost";
+        ZOHO.CRM.CONNECTOR.isConnectorAuthorized(connectorName).then(function(result){
+         console.log("acuityAuthorize resp :: "+result); 
+         if("true"==result)
+         {
+            $("#acuityDone").show();
+            $("#acuity").hide();
+         }
+        });
+
+        var connectorName = "zohosign";
+        ZOHO.CRM.CONNECTOR.isConnectorAuthorized(connectorName).then(function(result){
+         console.log("zohosignAuthorize resp :: "+result); 
+         if("true"==result)
+         {
+            $("#signDone").show();
+            $("#sign").hide();
+         }
+        });
+    }
+    function tempHide(){
+        ZOHO.CRM.ACTION.enableAccountAccess().then(function(data)
+        {
+        alert(data);
+        console.log("PopUp Removed"); 
+        console.log(data);
+        })
+    }
+    function hideNow(){
+        //$(".TemplateBack").hide();
+        //$("#CBWidgetPopUp").hide();
+        //$("#FreezeLayer").hide();
+        ZOHO.CRM.UI.Popup.close();
+    }
+    function gotoDisablePage()
+    {
+        $(".maindiv").hide();
+        $("#finish").show();
+    }
+    function config(){
+        console.log("Inside config function!");
+        getURL = window.location.href;
+        if(getURL.includes("zohosandbox"))
+        {
+            parent.window.location.href = "https://professionalcoaching.zohosandbox.com/crm/settings/api";
+        }else{
+            parent.window.location.href = "https://professionalcoaching.zohoplatform.com/crm/settings/ext-connectors";
+        }   
+        hideNow();     
+    }       
+    function back1(){
+        $("#calendly_details").hide();
+        $("#paypal_details").hide();
+        $("#configDetails").hide();
+        $("#maindiv").show();
+    }    
+
+    function showEmptyTwilio(){
+        renderTemplate("twiliodetails",{},"twiliodiv",loadButtons);        
+    }
+    function showTwilio(){
+        s={"obj":{"Twilio_Account_SID":twilioInfo["1stopro__Twilio_Account_SID"].value,"Twilio_AuthToken":twilioInfo["1stopro__Twilio_AuthToken"].value,"Twilio_Mobile_Number":twilioInfo["1stopro__Twilio_Mobile_Number"].value}};
+        renderTemplate("twiliodetails",s,"twiliodiv",loadButtons);
+        
+    }
+    function goBack(){
+        $("#twiliodiv").hide();
+        $("#maindiv").show();
+    }
+    function renderTemplate(templateId,data,divVal,callBack){
+        var template = $("#"+templateId).html();
+        var compiledTemplate = Handlebars.compile(template);
+        var widgetsDiv =$("#"+divVal);
+        widgetsDiv.html(compiledTemplate(data));
+        if(callBack)
+        {
+            $("#maindiv").hide();
+            $("#twiliodiv").show();
+           callBack();                
+        }
+    }
+    function confirmUnsubscribe(){
+        ZOHO.CRM.CONNECTOR.invokeAPI("crm.set",{"apiname":"1stopro__Twilio_Account_SID","value":""}).then(function(){
+                            ZOHO.CRM.CONNECTOR.invokeAPI("crm.set",{"apiname":"1stopro__Twilio_AuthToken","value":""}).then(function(){
+                                ZOHO.CRM.CONNECTOR.invokeAPI("crm.set",{"apiname":"1stopro__Twilio_Mobile_Number","value":""}).then(function(){
+                                        /*ZOHO.CRM.ACTION.enableAccountAccess().then(function(data){
+                                            console.log(data);
+                                        })*/
+                                        $("#unsubscribeMsg").show();
+                                        setTimeout(function(){
+                                            $("#unsubscribeMsg").hide();  
+                                            /*ZOHO.CRM.UI.Popup.close().then(function(data){
+                                                console.log(data)
+                                            })*/
+                                            location.reload();
+                                        }, 2000);
+                                });
+                            });
+                        });
+    }
+    function doNothing() {
+            $(".confirmationpopup").hide();
+            $(".BlackBG").hide();
+        }
+</script>   
+<div class="TemplateBack clearfix" id="maindiv">     
+    <div class="popupbg" style="text-align:center;">
+        <!--
+        <p class="hdrText">Welcome To 1stopro CRM</p>
+        <p class="subhdrText">Please Configure the below integrations</p>
+    -->
+        <div class="container">
+            <!--
+            <div class="contentlist">
+                <span class="logo-acuity"></span>
+                <p class="featuretext">Acuity lets you create and manage events through its calendar</p>
+                <button id="acuity" class="primaryBtn fR mT8" onclick="config();">Acuity Sync</button>
+                <button id="acuityDone" class="secondaryBtn doneBtn fR" style="display:none;" onclick="config();">Acuity Sync</button>
+            </div>
+             <div class="contentlist">
+                <span class="logo-zohosign"></span>
+                <p class="featuretext">Make document signing easier through zoho sign</p>
+                <button id="sign" class="primaryBtn fR mT8" onclick="config();">Zoho Sign Sync</button>
+                <button id="signDone" class="secondaryBtn doneBtn fR" style="display:none;" onclick="config();">Zoho Sign Sync</button>
+            </div>
+        -->
+             <div class="contentlist">
+                <span class="logo-twilio"></span>
+                <p class="featuretext">You can send SMS text to your leads and contacts through twilio</p>
+                <button id="Twilio" class="primaryBtn fR mT8" style="display:block;" onclick="showEmptyTwilio();">Twilio Sync</button>
+                <button id="TwilioDone" class="secondaryBtn doneBtn fR" style="display:none;" onclick="showTwilio();">Twilio Sync</button>
+            </div>
+        </div>        
+    
+    </div>  
+</div>
+
+<div id="finish" style="display:none;">    
+    <!--<p class="subhdr">Configure Calendly Appointment Syncronization</p> -->
+    <div style="margin-top:10px; ">
+        <h4> Congrats! You have no pending configuration to set your account up. You're good to go. </h4>
+    </div>
+    <div class="mT30" style="margin-top:10px; display:none;">
+        <a href="javascript:;" onclick="cancelInteg()" class="mT15 fldtext" style="border-bottom: 1px dotted #a0a0a0;">Click here to&nbsp;Disable</a>
+    </div>
+
+</div>  
+<div class="BlackBG" style="display: none;"></div>
+<div class="twiliopage" id="twiliodiv" style="display: none;">    
+</div>
+<script type="text/x-handlebars-template" id="twiliodetails">
+<button class="gobackBtn" onclick="goBack();"><- Back</button>
+    <div class="gettingpart">
+        <h2 class="sectoinhdr">Twilio Setup</h2>
+        <div class="confirmationpopup" style="display: none;">
+            <div class="hdrBG">
+                <div class="hdrTet">Confirm Unsubscribt Twilio</div>
+                <div class="closeDiv" onclick="doNothing();"></div>
+            </div>
+             <div class="contentDiv">
+                    <div class="fieldcontent">
+                        
+                            <p class="confirmText">Are you sure you want to unsubscribe Twilio?</p></div>
+                        
+                
+                    <div class="BtnBG">
+                        <a href="javascript:;" onclick="confirmUnsubscribe();" class="redBtn fR">Yes</a>                    
+                        <a href="javascript:;" onclick="doNothing();" class="cancelBtn fR mR15">No</a>                  
+                    </div>
+                
+            </div>
+        </div>
+        <div class="successMessage" id="unsubscribeMsg" style="display:none;"><div class="successIcon"></div>
+          <p class="datamessage">Twilio Unsubscribed Successfully!</p>
+        </div>
+        <ul class="getsection">
+            <li class="formlist">
+                {{!-- ACaeaa8262bb6a3ea4aaf5d6fa2f37a713 --}}
+                <div class="formlistlabel"><label class="formlabelText">Twilio Account SID</label></div>
+                {{#if obj}}
+                <div class="formlistvalue"><input type="text" name="Twilio Account SID" class="formvalueText" id="Twilio_Account_SID" value="{{obj.Twilio_Account_SID}}"></div>
+                {{else}}
+                <div class="formlistvalue"><input type="text" name="Twilio Account SID" class="formvalueText" id="Twilio_Account_SID" placeholder="Enter Your Twilio Account SID"></div>
+                {{/if}}
+            </li>
+            <li class="formlist">
+                {{!-- d7ead497e0da9f4600f4990cf935aeea --}}
+                <div class="formlistlabel"><label class="formlabelText">Twilio AuthToken</label></div>
+                {{#if obj}}
+                <div class="formlistvalue"><input type="text" name="Twilio AuthToken" class="formvalueText" id="Twilio_AuthToken" value="{{obj.Twilio_AuthToken}}"></div>
+                {{else}}
+                <div class="formlistvalue"><input type="text" name="Twilio AuthToken" class="formvalueText" id="Twilio_AuthToken" placeholder="Enter Your Twilio AuthToken"></div>
+                {{/if}}
+            </li>
+            <li class="formlist">
+                {{!-- +13213207471   --}}
+                <div class="formlistlabel"><label class="formlabelText">Twilio Mobile Number</label></div>
+                {{#if obj}}
+                <div class="formlistvalue"><input type="text" name="Twilio Mobile Number" class="formvalueText" id="Twilio_Mobile_Number" value="{{obj.Twilio_Mobile_Number}}"></div>
+                {{else}}
+                <div class="formlistvalue"><input type="text" name="Twilio Mobile Number" class="formvalueText" id="Twilio_Mobile_Number" placeholder="Enter Your Twilio Mobile Number"></div>
+                {{/if}}
+            </li>
+
+            <li class="formlist">
+                <button class="primaryBtn fR" id="save">Save</button>
+                {{!-- <button class="secondaryBtn fR mR10" id="Twilio_Register">No Account? Register with Twilio</button> --}}                
+                {{#if obj}}
+                    <input type="button" class="redBtn fR" style="margin-right:8px;" name="Unsubscribe" id="Twilio_unregister" value="Unsubscribe">
+                {{/if}}
+            </li> 
+        </ul>
+    </div>
+    <div class="titlepart">
+        <h2 class="sectoinhdr">Support</h2>
+        <div class="noteDiv">
+            If you have questions about how to use any part of the software, or feedback on other features you'd like to see, you can email us at <a class="clar" href="#"> jason@1stopro.com</a> 
+        </div>
+    </div>     
+</script>
+</body>
+</html>

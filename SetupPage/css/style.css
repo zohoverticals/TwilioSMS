@@ -1,0 +1,926 @@
+/** {
+    margin: 0;
+    padding: 0px;
+}
+
+body {
+	width: 100%;
+	height: 100%;
+    background: #fff;
+    font-size: 16px;
+    font-family: "proxima_nova_rgregular";
+}
+*/
+*{margin:0px; padding:0px;}
+body{line-height:1;font-family: 'Open Sans', sans-serif;}
+
+input,
+select,
+button,
+textarea {
+    border: 0px;
+    outline: none;
+    text-decoration: none;
+}
+
+ul li,
+ol li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dIB {
+    display: inline-block;
+}
+
+.dB {
+    display: block;
+}
+
+.fL {
+    float: left;
+}
+
+.fR {
+    float: right;
+}
+@font-face {
+    font-family: "proxima_nova_rgregular";
+    src: url("https://fonts.zohostatic.com/proximanova/proximanova_regular_macroman/ProximaNova-Reg-webfont.eot");
+    src: url("https://fonts.zohostatic.com/proximanova/proximanova_regular_macroman/ProximaNova-Reg-webfont.eot?#iefix") format("embedded-opentype"), url("https://fonts.zohostatic.com/proximanova/proximanova_regular_macroman/ProximaNova-Reg-webfont.woff") format("woff"), url("https://fonts.zohostatic.com/proximanova/proximanova_regular_macroman/ProximaNova-Reg-webfont.ttf") format("truetype"), url("https://fonts.zohostatic.com/proximanova/proximanova_regular_macroman/ProximaNova-Reg-webfont.svg#proxima_nova_rgregular") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "proxima_nova_semibold";
+    src: url("https://fonts.zohostatic.com/proximanova/proximanova_semibold_macroman/ProximaNova-Sbold-webfont.eot");
+    src: url("https://fonts.zohostatic.com/proximanova/proximanova_semibold_macroman/ProximaNova-Sbold-webfont.eot?#iefix") format("embedded-opentype"), url("https://fonts.zohostatic.com/proximanova/proximanova_semibold_macroman/ProximaNova-Sbold-webfont.woff") format("woff"), url("https://fonts.zohostatic.com/proximanova/proximanova_semibold_macroman/ProximaNova-Sbold-webfont.ttf") format("truetype"), url("https://fonts.zohostatic.com/proximanova/proximanova_semibold_macroman/ProximaNova-Sbold-webfont.svg#proxima_novasemibold") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+/*
+.linkclr {
+	font-size: 15px;
+	color:#2C7BD0;
+	cursor: pointer;
+	float: right;
+	margin-top:390px;
+}
+*/
+.linkText {
+    color: #2C7BD0;
+    cursor: pointer;
+}
+.closeicon {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    float: left;
+    top: -50px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.closeicon:before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: #333;
+    position: absolute;
+    margin: 15px 0 0 4px;
+    transform: rotate(-45deg);
+    top: -4px;
+    left: -3px;
+}
+.closeicon:after {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: #333;
+    position: absolute;
+    top: 11px;
+    left: 1px;
+    transform: rotate(40deg);
+}
+.mT8 {
+    margin-top: 8px;
+}
+.mT10 {
+    margin-top: 10px;
+}
+
+.mT20 {
+    margin-top: 20px;
+}
+
+.mT15 {
+    margin-top: 15px;
+}
+
+.mT25 {
+    margin-top: 25px;
+}
+
+.mR12 {
+    margin-right: 12px;
+}
+
+.mR10 {
+    margin-right: 10px;
+}
+.mL10 {
+    margin-left: 10px;
+}
+.mB10{
+    margin-bottom: 10px;
+}
+
+/*------------Commen style-------------*/
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+/*.TemplateBack
+{
+	width:100%;
+	height:100%;
+	border:1px solid #e3e3e3;
+	background: #f0f0f0;
+	position: relative;
+	display: inline-block;
+}*/
+.TemplateBack {
+    width: 100%;
+    height:520px;
+    background: #fff;
+    position: relative;
+}
+
+.popupbg {
+    width: 650px;
+    max-height: 600px;;
+    background: #fff;
+    margin:60px auto 0;
+    border-radius: 4px;
+    overflow-y: scroll;
+    /*box-shadow: 0px 0px 10px rgba(195, 198, 205,.7);*/
+}
+
+.fldHd {
+    font-size: 24px;
+    color: #242424;
+}
+
+.fldtext {
+    font-size: 16px;
+    color: #444;
+}
+
+.clra {
+    cursor: pointer;
+    font-size: 16px;
+    color: #0088cc;
+    display: inline-block;
+}
+
+.clr7 {
+    color: #777;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.rightpopup {
+    width: 340px;
+    height: 100%;
+    padding: 20px 0px;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    box-shadow: -3px 3px 5px rgba(0, 0, 0, .05);
+    display: inline-block;
+    background: #fff;
+}
+
+.rightchild {
+    width: 100%;
+    padding: 35px;
+    box-sizing: border-box;
+    display: inline-block;
+    border-bottom: 1px solid #e3e3e3;
+}
+
+.rightchild h6 {
+    font-size: 16px;
+    color: #333;
+}
+
+.linktext {
+    font-size: 15px;
+    color: #333;
+    display: inline-block;
+    margin-top: 5px;
+    line-height: 1.5;
+}
+
+.linktext::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background: url(../img/product-icon.png) no-repeat -20px -21px;
+    margin-right: 12px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.icon,
+.appleicon {
+    width: 30px;
+    height: 30px;
+    background: url(../img/product-icon.png) no-repeat -109px -17px;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+.appleicon {
+    background: url(../img/product-icon.png) no-repeat -58px -17px;
+}
+
+#auth,
+#email,
+#clientId,
+#clientSecret {
+    font-size: 13px;
+    width: 350px;
+    padding: 10px;
+    color: #585858;
+    float: left;
+    border: 1px solid #bababa;
+    cursor: pointer;
+    display: inline-block;
+    box-sizing: border-box;
+
+}
+
+#helplink,
+#emailhelplink,
+.payPalhelplink {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    text-align: center;
+    color: #999;
+    font-weight: 600;
+    float: left;
+    margin-top: 5px;
+    margin-left: 12px;
+    line-height: 1.3;
+    position: absolute;
+    cursor: pointer;
+}
+
+#helplink::after {
+    content: "Click here to get Your Calendly API Key";
+    width: 90px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    background: #333;
+    font-size: 14px;
+    color: #f8f8f8;
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    text-align: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .5s ease-in-out 0s;
+}
+
+#emailhelplink::after {
+    content: "Click here to get Your Calendly Eamil Address";
+    width: 90px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    background: #333;
+    font-size: 14px;
+    color: #f8f8f8;
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    text-align: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .5s ease-in-out 0s;
+}
+
+.payPalhelplink::after {
+    content: "Click here to create Your Paypal REST APP Api";
+    width: 90px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    background: #333;
+    font-size: 14px;
+    color: #f8f8f8;
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    text-align: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .5s ease-in-out 0s;
+}
+
+#helplink:hover::after,
+#emailhelplink:hover::after,
+.payPalhelplink:hover::after {
+    visibility: visible;
+    opacity: 1;
+    transition: all .5s ease-in-out 0s;
+}
+
+#calendly_details,
+#paypal_details {
+    /*width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+    display: inline-block;*/
+
+    width: 410px;
+    margin-left: -200px;
+    left: 50%;
+    position: relative;
+    padding: 30px;
+    box-sizing: border-box;
+    display: inline-block;
+    top: 15%;
+
+}
+
+.subhdr {
+    width: 100%;
+    font-family: ProximaNovalight, Arial, sans-serif !important;
+    font-size: 16px;
+    color: #585858 !important;
+    float: left;
+    margin-top: 20px;
+}
+
+.Btnbg {
+    width: 100%;
+    padding-top: 20px;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: right;
+}
+
+.primaryBtn,
+.secondaryBtn,
+.bluebtn, .redBtn, .cancelBtn {
+    border-radius: 2px;
+    font-size:15px;
+    padding:6px 12px;
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 2px;
+    color: #fff;
+    background-color: #42a2eb;
+    border: solid 1px #42a2eb;
+    vertical-align: top;
+}
+
+.secondaryBtn {
+    color: #3c3c3c;
+    background-color: #fff !important;
+    border: solid 1px #c4c4c4;
+}
+
+.primaryBtn:hover,
+.bluebtn:hover {
+    background-color: #3c98dd !important;
+    border-bottom: solid 1px #1b70b0 !important;
+}
+
+.secondaryBtn:hover {
+    border: solid 1px #abaaaa;
+    border-bottom: solid 1px #777;
+}
+.cancelBtn{
+    background-color: #ffffff;
+    border: 1px solid #c5c5c5;
+    color: #666666;
+}
+.cancelBtn:hover{
+    border: solid 1px #abaaaa;
+    border-bottom: solid 1px #777;
+    color: #111 !important;
+}
+.error {
+    height: 1px;
+    /* border-radius: 999px; */
+    /* border: 1px solid #ccc; */
+    /* text-align: center; */
+    color: #d50000;
+    flex: 1 1 auto;
+    font: 400 12px Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+    /* min-height: 3px; */
+    padding-top: 0px;
+    float: left;
+    /* margin-top: 5px; */
+    margin-bottom: 5px;
+    margin-left: 12px;
+}
+
+.doneBtn {
+    position: relative;
+    padding-right: 40px !important;
+    cursor: auto !important;
+}
+
+.doneBtn::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    background: url(../img/product-icon.png) no-repeat -61px -60px;
+}
+/* Getting started page style */
+.hdrText{
+	font:22px/1 'proxima_nova_semibold';
+	color:#111;
+	text-align: center;
+	-webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.subhdrText {
+    font: 16px/1 'proxima_nova_semibold';
+    color: #111;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    float: left;
+    margin: 25px 0 10px;
+    text-align: center;
+    width: 100%;
+}
+.container {
+	width: 100%;
+	display: flex;
+	flex-flow: column;
+}
+.contentlist {
+    width: 100%;
+    padding:15px 20px 15px 15px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    text-align: left;
+    border: 1px solid #e2e2e2;
+    margin-top: 20px;
+}
+.featuretext {
+    width: 280px;
+    float: left;
+    padding-right: 12px;
+    font-size: 15px;
+    color: #313131;
+    line-height: 1.3;
+    box-sizing: border-box;
+}
+.contentlist:hover {
+	background: #f9f9f9;
+}
+.logo-acuity, .logo-zohosign, .logo-twilio {
+	width: 45px;
+	height: 48px;
+	background: url(../img/acuity.png) no-repeat;
+	background-size: cover;
+	float:left;
+	margin-right: 12px;
+}
+.logo-zohosign {
+	background: url(../img/zoho-sign.png) no-repeat;
+}
+.logo-twilio{
+	background: url(../img/twilio.png) no-repeat;
+}
+
+/* twiliopage designs style code */
+.twiliopage {
+    width: 100%;
+    max-height: 600px;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    background: #fff;
+    float: left;
+}
+.gettingpart {
+    width: 100%;
+    float: left;
+}
+.sectoinhdr {
+    width: 100%;
+    float: left;
+    font:18px/1 'proxima_nova_semibold';
+    font-size: 18px;
+    color: #111;
+}
+.getsection {
+   width: 100%;
+    float: left;
+    padding: 20px 30px 0px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border: 1px solid #eceff1;
+    margin:15px 0 35px;
+}
+.formlist {
+    width: 100%;
+    float: left;
+    padding-bottom: 18px;
+    max-height: 75px;
+    margin-bottom: 15px;
+}
+
+.formlistlabel {
+    width: 34%;
+    min-height: 34px;
+    padding: 0px;
+    float: left;
+}
+
+.formlabelText {
+    width: 100%;
+    float: left;
+    padding: 8px 25px 8px 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #666;
+    text-align: right;
+    border: 1px solid transparent;
+}
+
+.formlistvalue {
+    width: 65%;
+    min-height: 34px;
+    float: left;
+    padding: 0px;
+    border: 1px solid #c3c6ca;
+    border-radius: 5px;
+    position: relative;
+}
+
+.formvalueText {
+    width: 100%;
+    float: left;
+    padding: 8px 10px 8px 12px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #111;
+    border-radius: 5px;
+    vertical-align: top;
+}
+.formboxText {
+    width: 100%;
+    height: 34px;
+    float: left;
+    padding: 8px 5px 8px 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+    color: #000;
+    resize: vertical;
+    border-radius: 5px;
+    transition: .3s ease-out;
+}
+.mandatory:before {
+    content: '';
+    height: 100%;
+    width: 3px;
+    background: #f27b77;
+    position: absolute;
+    top: 0;
+    left: -1px;
+    border-radius: 5px 0 0 5px;
+    z-index: 1;
+}
+.errorText {
+    font-size: 13px;
+    color: #f27b77;
+    float: left;
+    margin-left: 30%;
+    margin-top: 6px;
+    display: none;
+}
+.formlistvalue:hover {
+    border-color: #c3c6ca;
+    box-shadow:0 0 6px #c3c6ca;
+}
+.noteDiv {
+    width: 100%;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    background: #f2faff;
+    float: left;
+    border-radius: 3px;
+    border: 3px solid transparent;
+    border-left-color: #59b5ea;
+    font-size: 15px;
+    color: #444;
+    line-height: 1.4;
+    margin-top:18px;
+}
+.gobackBtn {
+    width: 100%;
+    font-size: 14px;
+    color:#111;
+    float:left;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+
+.clar
+{
+    color:#0088cc;
+}
+/*
+.doneBtn{
+    position: relative;
+    padding-right: 40px !important;
+}
+.doneBtn::after{
+    content: "";
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    position: absolute;
+    right: 10px;
+    top:2px;
+    background: url(../img/product-icon.png) no-repeat -61px -60px;
+}
+*/
+.redBtn {
+    border: 1px solid transparent;
+    background-color: #ec4844!important;
+    background-image: none;
+    color: white;
+}
+.redBtn:hover{
+    background-color: #e0260c!important;
+    border-bottom: solid 1px #ec4844!important
+}
+
+.confirmationpopup {
+    width: 500px;
+    padding-bottom: 35px;
+    box-sizing: border-box;
+    background: #fff;
+    position: absolute;
+    display: block;
+    left: 50%;
+    /*top: 30px;*/
+    transform: translate(-50%);
+    z-index: 2;
+}
+.hdrBG {
+    width: 100%;
+    float: left;
+    padding: 10px 10px 8px;
+    box-sizing: border-box;
+    background: #f0f1f3;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+}
+.hdrTet {
+    font-size: 18px;
+    color: #111;
+    float: left;
+}
+.closeDiv {
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    transition: transform .3s ease-out;
+    cursor: pointer;
+    border-radius: 999px;
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}
+.closeDiv:before{
+    content: "";
+    width: 1px;
+    height: 15px;
+    border-radius: .5px;
+    background: #444;
+    line-height: 1;
+    right: 10px;
+    top: 0px;
+    position: absolute;
+    transition: transform .3s ease-out;
+}
+.closeDiv:before {
+    transform: rotate(-45deg);
+}
+.closeDiv:after {
+    content: "";
+    width: 1px;
+    height: 15px;
+    border-radius: .5px;
+    background: #444;
+    line-height: 1;
+    right: 10px;
+    top: 0px;
+    position: absolute;
+    transition: transform .3s ease-out;
+}
+.closeDiv:after {
+    transform: rotate(45deg);
+}
+.contentDiv {
+    width: 100%;
+    padding: 25px 20px 60px;
+    box-sizing: border-box;
+    background: #fff;
+    max-height: 250px;
+    overflow-y: scroll;
+    margin-top: 34px;
+    text-align: center;
+}
+.fieldcontent {
+    width: 100%;
+    float: left;
+    margin-bottom: 20px;
+}
+.confirmText {
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    line-height: 1.3;
+    margin-top: 15px;
+}
+.BtnBG {
+    width: 100%;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    background: #fff;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -7px 10px -10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+
+.BlackBG{
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    background: rgba(64, 69, 72, .3);
+}
+
+
+
+.successMessage,
+.errorMessage {
+    min-width: 280px;
+    min-height: 35px;
+    font-size: 1rem;
+    color: #333;
+    position: fixed;
+    background: #fff;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+    border: 1px solid #3fbd5f;
+    border-radius: 2px;
+    line-height: 2;
+    text-transform: capitalize;
+    box-shadow: -2px 0px 15px rgba(63, 189, 95, .5);
+}
+.errorMessage{
+    top:120px;
+}
+
+.errorMessage {
+    border: 1px solid #eb393a;
+    box-shadow: -2px 0px 15px rgba(235, 57, 58, .5);
+    color: red !important;
+}
+
+.successIcon,
+.errorIcon {
+    width: 40px;
+    height: 35px;
+    background: url(../img/icon_warning.svg) no-repeat -87px -43px #3fbd5f;
+    float: left;
+    border-radius: 2px 0px 0px 2px;
+    margin-right: 18px;
+    position: relative;
+}
+.datamessage{
+    padding: 0px 12px 0px 0px;
+    box-sizing: border-box;
+    float: left;
+    margin: 0px;
+    font-size: 15px;
+    color: #333;
+}
+.errorIcon {
+    background: url(../img/icon_warning.svg) no-repeat -89px -73px #eb393a;
+}
+
+.successIcon:after,
+.errorIcon:after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-color: transparent transparent transparent #3fbd5f;
+    position: absolute;
+    top: 12px;
+    right: -10px;
+}
+
+.errorIcon:after {
+    border-color: transparent transparent transparent #eb393a;
+}
+.mR15{
+    margin-right: 15px;
+}
+
+
+.logoimg{
+    width: 45px;
+    height: 45px;
+    background:url(../img/paypal.png) no-repeat;
+    background-size: cover;
+    margin:0 auto;
+}
+.paypalURl, 
+.twilio_callback_url
+{
+    width: 400px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 1px solid #dadfe2;
+    font-size: 15px;
+    color: #5f6c72;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.HdrText{
+    font-size: 20px;
+    color: rgb(95, 108, 114);
+    margin-top: 25px;
+    text-align: center;
+    font-family: "proxima_nova_semibold";
+    line-height: 1.3;
+    -webkit-font-smoothing: antialiased;
+}
+.contentText{
+    font-size: 15px;
+    line-height: 1.3;
+    color: #444;
+    margin-top: 15px;
+    text-align: center;
+}
+.linkclr{
+    font-size: 15px;
+    color:#2C7BD0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.paypalBtn {
+    color:#555;
+    background: #f1f4f5;
+    border: 1px solid #dadfe2;
+    transition:.3s ease-out;     
+    font-size: .929rem;
+    padding: .35rem 1.071rem;
+    box-sizing: border-box;
+    font-family: "ProximaNovaRegular",arial,sans-serif;
+    cursor: pointer;
+    outline: none;
+    appearance: none!important;
+    border-radius: 2px!important;
+}
+.paypalBtn:hover {
+    background: #e8edef;
+    transition:.3s ease-out;
+}
